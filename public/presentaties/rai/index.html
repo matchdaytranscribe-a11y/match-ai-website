@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Co-Pilot voor RAI Beursteams - Presentatie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Match AI Brand Colors */
+            --primary-orange: #ed6e1c;
+            --primary-blue: #1a2238;
+            --primary-dark: #0f1419;
+            --accent-orange: #ff8c3a;
+            --text-white: #ffffff;
+            --text-gray: #e0e0e0;
+            --text-secondary: #a8a8a8;
+            --border-color: #ffffff20;
+            --success-green: #10B981;
+            --danger-red: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            padding: 20px;
+            min-height: 100vh;
+            color: var(--text-white);
+        }
+
+        .presentation-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .slide {
+            background: linear-gradient(135deg, rgba(26, 34, 56, 0.95) 0%, rgba(15, 20, 25, 0.95) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 80px 60px;
+            margin-bottom: 40px;
+            page-break-after: always;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header branding */
+        .slide::before {
+            content: "🔷 Match AI";
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            font-size: 13px;
+            color: var(--primary-orange);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            border: 2px solid var(--primary-orange);
+            justify-content: center;
+            text-align: center;
+        }
+
+        .slide.title-slide::before {
+            content: "";
+        }
+
+        .slide.title-slide::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--primary-orange), transparent);
+            opacity: 0.1;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .slide-header {
+            position: relative;
+            z-index: 2;
+        }
+
+        .slide.title-slide h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--text-white), var(--text-gray));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide.title-slide .subtitle {
+            font-size: 28px;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            color: var(--text-gray);
+        }
+
+        .slide.title-slide .date {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 40px;
+        }
+
+        .slide h2 {
+            color: var(--text-white);
+            font-size: 44px;
+            margin-bottom: 35px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slide h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 60px;
+            background: linear-gradient(90deg, var(--primary-orange), var(--accent-orange));
+            border-radius: 2px;
+        }
+
+        .slide h3 {
+            color: var(--primary-orange);
+            font-size: 22px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .slide p, .slide li {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+
+        .slide ul, .slide ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 15px;
+        }
+
+        .slide strong {
+            color: var(--primary-orange);
+            font-weight: 700;
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        /* Content boxes */
+        .content-box {
+            background: linear-gradient(135deg, rgba(237, 110, 28, 0.08) 0%, rgba(237, 110, 28, 0.03) 100%);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-orange);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .content-box:hover {
+            border-color: var(--primary-orange);
+            background: linear-gradient(135deg, rgba(237, 110, 28, 0.12) 0%, rgba(237, 110, 28, 0.05) 100%);
+        }
+
+        .content-box.before {
+            border-left-color: var(--danger-red);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.03) 100%);
+        }
+
+        .content-box.after {
+            border-left-color: var(--success-green);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+        }
+
+        .content-box h4 {
+            color: var(--text-white);
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .content-box ul {
+            margin-left: 20px;
+        }
+
+        .content-box li {
+            font-size: 15px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Metrics box */
+        .metrics-box {
+            background: linear-gradient(135deg, rgba(237, 110, 28, 0.06) 0%, rgba(237, 110, 28, 0.01) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .metric-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .metric-number {
+            color: var(--primary-orange);
+            font-weight: 900;
+            font-size: 32px;
+            min-width: 80px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Section boxes */
+        .section-box {
+            background: linear-gradient(135deg, rgba(255, 140, 58, 0.05) 0%, rgba(255, 140, 58, 0.01) 100%);
+            border-left: 4px solid var(--primary-orange);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .section-box h4 {
+            color: var(--primary-orange);
+            margin-bottom: 10px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .section-box p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.01) 100%);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--success-green);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        /* ROI Table */
+        .roi-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: transparent;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .roi-table th {
+            background: linear-gradient(90deg, var(--primary-orange), var(--accent-orange));
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .roi-table td {
+            padding: 14px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-gray);
+            font-size: 15px;
+        }
+
+        .roi-table tr:hover {
+            background: rgba(237, 110, 28, 0.05);
+        }
+
+        .roi-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .roi-table td strong {
+            color: var(--primary-orange);
+        }
+
+        /* CTA Box */
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--accent-orange) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(237, 110, 28, 0.3);
+        }
+
+        /* Slide number */
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            right: 40px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Speaker notes */
+        .speaker-notes {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.01) 100%);
+            border-left: 4px solid var(--danger-red);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .speaker-notes-label {
+            font-weight: 700;
+            color: var(--danger-red);
+            margin-bottom: 8px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .slide {
+                background: white;
+                color: #000;
+                border: 1px solid #ccc;
+                break-after: page;
+                box-shadow: none;
+                padding: 60px 40px;
+            }
+
+            .slide::before {
+                color: #ed6e1c;
+            }
+
+            .slide h2,
+            .slide h3,
+            .slide p,
+            .slide li {
+                color: #000;
+            }
+
+            .slide strong,
+            .metric-number {
+                color: #ed6e1c;
+            }
+
+            .content-box {
+                border-color: #ddd;
+                background: #f9f9f9;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 60px 40px;
+            }
+
+            .slide h2 {
+                font-size: 36px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Subtle animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Hero badge */
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(237, 110, 28, 0.2), rgba(237, 110, 28, 0.05));
+            border: 1px solid var(--border-color);
+            color: var(--primary-orange);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="presentation-wrapper">
+
+        <!-- SLIDE 1: TITLE SLIDE -->
+        <div class="slide title-slide">
+            <div class="slide-header">
+                <div class="badge">🚀 AI Co-Pilot Solution</div>
+                <h1>AI Co-Pilot voor RAI Beursteams</h1>
+                <div class="subtitle">Sneller Inzicht. Betere Sturing. Maximale Efficiency.</div>
+                <div class="date">Amsterdam | 10 februari 2026</div>
+            </div>
+            <div class="slide-number">Slide 1</div>
+        </div>
+
+        <!-- SLIDE 2: THE CHALLENGE -->
+        <div class="slide">
+            <h2>🎯 De Realiteit: Waar RAI Nu Mee Worstelt</h2>
+            
+            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <ul>
+                        <li><strong>Momentus ERP Complexiteit:</strong> Rapportages zijn traag, inzichten zijn verspreid, Co-pilot functionality ontbreekt</li>
+                        <li><strong>Ternair Marketing Database:</strong> Data insights niet beschikbaar, rapportage-capaciteit beperkt</li>
+                        <li><strong>Data Chaos:</strong> 100+ Excel spreadsheets van agenten wereldwijd - geen centraal overzicht</li>
+                        <li><strong>Styling & Formatting Work:</strong> Elk beursteam vereist custom opmaakwerk, datakwaliteit inconsistent</li>
+                        <li><strong>Rapportage Bottleneck:</strong> Handmatig werk voor elke beurs, veel copy-paste, fouten</li>
+                    </ul>
+
+                    <div class="speaker-notes">
+                        <div class="speaker-notes-label">💬 Speaker Notes:</div>
+                        "We hebben jullie contactpersonen gesproken - Dieuxdonnée, Yvette, Petra - en een duidelijk patroon zien: jullie besteden minstens 30-40% van de tijd aan administratief werk in plaats van strategische activiteiten."
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-number">Slide 2</div>
+        </div>
+
+        <!-- SLIDE 3: WHY NOW -->
+        <div class="slide">
+            <h2>⏰ Waarom Nu? De Cost van Data Chaos</h2>
+            
+            <div class="metrics-box">
+                <div class="metric-item">
+                    <span class="metric-number">15-20</span>
+                    <span>uur/week aan handmatige rapportage en consolidatie</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">15-25%</span>
+                    <span>data inconsistenties tussen Excel lijstjes</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">€30-40k</span>
+                    <span>per FTE per jaar opportunity cost</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">❌</span>
+                    <span>Real-time insights voor snelle beslissingen</span>
+                </div>
+            </div>
+
+            <p><strong>De conclusie:</strong> Data chaos kost directe uren EN strategische snelheid. Scaling is niet mogelijk zonder meer FTE's.</p>
+
+            <div class="speaker-notes">
+                <div class="speaker-notes-label">💬 Speaker Notes:</div>
+                "Een paar nummers: als één person 15 uur/week kwijt is aan admin werk, dat's gelijk aan €30k-40k per jaar per person. Vermenigvuldig dat met 5 beursteams, en we praten over serieus geld."
+            </div>
+
+            <div class="slide-number">Slide 3</div>
+        </div>
+
+        <!-- SLIDE 4: OPENCLAW SOLUTION -->
+        <div class="slide">
+            <h2>🚀 Wat is OpenClaw AI?</h2>
+            
+            <h3>Echte AI Agents, Niet Workflow Tools</h3>
+            
+            <p>Wij bieden geen traditionele automation tools. Dit zijn <strong>echte AI agents</strong> - ze kunnen redeneren, context begrijpen, en complexe workflows autonomously uitvoeren.</p>
+
+            <div class="grid-2">
+                <div class="section-box">
+                    <h4>☁️ Managed Cloud</h4>
+                    <p>We runnen de infrastructure. Jullie hoeven niets te beheren.</p>
+                </div>
+                <div class="section-box">
+                    <h4>🔐 Security Layer</h4>
+                    <p>Encryption, audit trails, compliance - CISO-grade.</p>
+                </div>
+                <div class="section-box">
+                    <h4>🧠 AI Agents</h4>
+                    <p>Autonomous workflows met reasoning capabilities.</p>
+                </div>
+                <div class="section-box">
+                    <h4>🔗 Integration Hub</h4>
+                    <p>Connects Momentus, Ternair, Excel, en custom systems.</p>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <div class="speaker-notes-label">💬 Speaker Notes:</div>
+                "OpenClaw is anders dan traditionele automation tools. Dit zijn echte AI agents - ze kunnen redeneren, context begrijpen, en complexe workflows autonomously uitvoeren."
+            </div>
+
+            <div class="slide-number">Slide 4</div>
+        </div>
+
+        <!-- SLIDE 5: USE CASE 1 - REPORTING -->
+        <div class="slide">
+            <h2>📊 Use Case 1: Automated Reporting</h2>
+            
+            <h3>Momentus & Ternair - From Manual to Automated</h3>
+
+            <div class="grid-2">
+                <div class="content-box before">
+                    <h4>❌ BEFORE (Manual)</h4>
+                    <ul>
+                        <li>3-4 hours per report</li>
+                        <li>Data scattered across systems</li>
+                        <li>Reports at 2pm (too late)</li>
+                        <li>85% accuracy</li>
+                    </ul>
+                </div>
+                <div class="content-box after">
+                    <h4>✅ AFTER (Automated)</h4>
+                    <ul>
+                        <li>Automated daily extraction</li>
+                        <li>Unified dashboards</li>
+                        <li>Reports at 6am</li>
+                        <li>99.8% accuracy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="metrics-box">
+                <div class="metric-item">
+                    <span class="metric-number">⏱️</span>
+                    <span><strong>12-15 hours/week saved</strong> per team</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">📈</span>
+                    <span><strong>6x faster</strong> report delivery</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">✓</span>
+                    <span><strong>99.8% consistency</strong> vs 85% manual</span>
+                </div>
+            </div>
+
+            <div class="slide-number">Slide 5</div>
+        </div>
+
+        <!-- SLIDE 6: USE CASE 2 - DATA CONSOLIDATION -->
+        <div class="slide">
+            <h2>🌍 Use Case 2: Data Consolidatie</h2>
+            
+            <h3>Excel Chaos → Unified Insights</h3>
+
+            <div class="timeline">
+Agent 1 (Bangkok)      ┐
+Agent 2 (London)       ├─→  AI Reconciliation  ─→  Unified Dashboard
+Agent 3 (Paris)        │      (validates,            (100% visibility)
+Agent 4 (Tokyo)        │       consolidates,        Real-time
++ 43+ more agenten...  ┘       flags anomalies)     Alerts
+            </div>
+
+            <h3>The Problem</h3>
+            <ul>
+                <li>100+ spreadsheets globally, no central view</li>
+                <li>Quality issues, duplicates, inconsistencies</li>
+                <li>Manual weekly consolidation (slow, error-prone)</li>
+            </ul>
+
+            <h3>The Solution</h3>
+            <ul>
+                <li>AI monitors all sources continuously</li>
+                <li>Automatic reconciliation & validation</li>
+                <li>Real-time anomaly detection</li>
+                <li>Single source of truth</li>
+            </ul>
+
+            <div class="metrics-box">
+                <div class="metric-item">
+                    <span class="metric-number">📊</span>
+                    <span><strong>100% data coverage</strong> (vs 60% today)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">⚡</span>
+                    <span><strong>Real-time</strong> instead of weekly</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">✓</span>
+                    <span><strong>98% consistency</strong> across all sources</span>
+                </div>
+            </div>
+
+            <div class="slide-number">Slide 6</div>
+        </div>
+
+        <!-- SLIDE 7: USE CASE 3 - CONTENT GENERATION -->
+        <div class="slide">
+            <h2>🎨 Use Case 3: Event Pagina Generator</h2>
+            
+            <h3>Automated Landing Pages & Event Pages</h3>
+
+            <div class="grid-2">
+                <div class="content-box before">
+                    <h4>❌ BEFORE (Manual)</h4>
+                    <ul>
+                        <li>40-60 hours per event</li>
+                        <li>2-week turnaround</li>
+                        <li>Brand inconsistencies</li>
+                        <li>Single language</li>
+                    </ul>
+                </div>
+                <div class="content-box after">
+                    <h4>✅ AFTER (Automated)</h4>
+                    <ul>
+                        <li>2-hour turnaround</li>
+                        <li>100% brand compliant</li>
+                        <li>5+ languages auto</li>
+                        <li>SEO-optimized</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Deliverables</h3>
+            <ul>
+                <li>Professional landing pages (responsive design)</li>
+                <li>Multi-language variants (NL, EN, DE, FR, IT)</li>
+                <li>SEO-optimized content & meta tags</li>
+                <li>A/B test variants</li>
+                <li>Email templates</li>
+            </ul>
+
+            <div class="metrics-box">
+                <div class="metric-item">
+                    <span class="metric-number">⚡</span>
+                    <span><strong>10x faster</strong> (2 hours vs 40 hours)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">🌍</span>
+                    <span><strong>5+ languages</strong> automatically generated</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-number">✓</span>
+                    <span><strong>100% brand compliance</strong></span>
+                </div>
+            </div>
+
+            <div class="slide-number">Slide 7</div>
+        </div>
+
+        <!-- SLIDE 8: SECURITY & COMPLIANCE -->
+        <div class="slide">
+            <h2>🔐 Security & Governance - CISO-Approved</h2>
+            
+            <h3>Data Protection</h3>
+            <ul>
+                <li><strong>Encryption:</strong> AES-256 at rest, TLS 1.3 in transit</li>
+                <li><strong>Isolation:</strong> Customer data logically isolated (zero cross-tenant access)</li>
+                <li><strong>Zero-Trust:</strong> Every request authenticated, every access logged</li>
+            </ul>
+
+            <h3>Governance & Compliance</h3>
+            <ul>
+                <li><strong>GDPR Ready:</strong> Data retention, right to be forgotten, data portability</li>
+                <li><strong>Audit Trails:</strong> Complete immutable logs of every agent action</li>
+                <li><strong>Access Controls:</strong> Role-based, principle of least privilege</li>
+                <li><strong>Compliance Reports:</strong> SOC2 Type II, quarterly penetration tests</li>
+            </ul>
+
+            <h3>Managed Service Advantages</h3>
+            <ul>
+                <li><strong>Patch Management:</strong> Security updates handled by us, not you</li>
+                <li><strong>24/7 Monitoring:</strong> Continuous threat detection</li>
+                <li><strong>Incident Response:</strong> SLA-backed response times (&lt;1hr)</li>
+                <li><strong>Cyber Insurance:</strong> We carry liability, eliminating your risk</li>
+            </ul>
+
+            <div class="speaker-notes">
+                <div class="speaker-notes-label">💬 Speaker Notes:</div>
+                "Dit is NIET een self-hosted solution. Dit is een managed platform. Wij beheren de infrastructure, security updates, compliance. Jullie krijgen volledige visibility via audit trails."
+            </div>
+
+            <div class="slide-number">Slide 8</div>
+        </div>
+
+        <!-- SLIDE 9: MANAGED SERVICE BENEFITS -->
+        <div class="slide">
+            <h2>☁️ Managed Solution: Why This Matters</h2>
+            
+            <div class="grid-2">
+                <div class="content-box before">
+                    <h4>❌ Self-Hosted Problems</h4>
+                    <ul>
+                        <li>You manage patches</li>
+                        <li>Infrastructure overhead</li>
+                        <li>Scaling = capex</li>
+                        <li>Compliance burden</li>
+                        <li>Vendor lock-in</li>
+                    </ul>
+                </div>
+                <div class="content-box after">
+                    <h4>✅ Managed Service Benefits</h4>
+                    <ul>
+                        <li>No ops burden (we handle 24/7)</li>
+                        <li>Predictable OpEx</li>
+                        <li>Auto-scaling included</li>
+                        <li>Compliance built-in</li>
+                        <li>Easy to change vendors</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>RAI-Specific Advantages</h3>
+            <ul>
+                <li><strong>Scale:</strong> From 1 beurs to 50+ without infrastructure changes</li>
+                <li><strong>Global:</strong> All agents on same secure system</li>
+                <li><strong>Elasticity:</strong> Holiday peaks? Auto-scaling handles it</li>
+                <li><strong>Compliance:</strong> Regulatory changes? We update, not you</li>
+            </ul>
+
+            <div class="slide-number">Slide 9</div>
+        </div>
+
+        <!-- SLIDE 10: PILOT APPROACH -->
+        <div class="slide">
+            <h2>🎯 Pilot Approach: €2k, 2 Weeks</h2>
+            
+            <h3>Timeline</h3>
+            <div class="timeline">
+WEEK 1: Setup & Configuration
+  Mon:    Kickoff, system setup, data connections
+  Tue-Fri: Configuration, agent training, testing
+  Fri:    Dry run with pilot beursteam
+
+WEEK 2: Go-Live & Results
+  Mon:    Production launch
+  Tue-Fri: Monitor, refine, gather feedback
+  Fri:    Pilot report + Phase 2 planning
+            </div>
+
+            <h3>What's Included (€2k)</h3>
+            <ul>
+                <li>Setup & system configuration</li>
+                <li>Integration with 2-3 key systems (Momentus, Ternair, sample sheet)</li>
+                <li>Agent customization for your workflows</li>
+                <li>Training for 5-10 key users</li>
+                <li>2 weeks of daily support</li>
+                <li>Comprehensive pilot report</li>
+            </ul>
+
+            <h3>Phase 2 (Post-Pilot)</h3>
+            <p><strong>Full rollout:</strong> All beursteams, all data sources<br>
+            <strong>Estimated cost:</strong> €5-8k/month for 50+ beurzen</p>
+
+            <div class="slide-number">Slide 10</div>
+        </div>
+
+        <!-- SLIDE 11: ROI & IMPACT -->
+        <div class="slide">
+            <h2>📈 ROI & Impact - Real Numbers</h2>
+            
+            <div style="text-align: center; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, rgba(237, 110, 28, 0.1), rgba(237, 110, 28, 0.05)); border: 1px solid var(--border-color); border-radius: 12px;">
+                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">YEAR 1 NET BENEFIT</div>
+                <div style="font-size: 48px; font-weight: 900; color: var(--primary-orange); margin-bottom: 10px;">€72,500</div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--text-gray);">725% ROI</div>
+            </div>
+
+            <h3>Time Savings Breakdown</h3>
+            <table class="roi-table">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Hours/Year</th>
+                        <th>FTE Equivalent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Momentus Reporting</td>
+                        <td>600 hrs</td>
+                        <td>6.0 FTE-months</td>
+                    </tr>
+                    <tr>
+                        <td>Ternair Insights</td>
+                        <td>250 hrs</td>
+                        <td>2.5 FTE-months</td>
+                    </tr>
+                    <tr>
+                        <td>Excel Consolidation</td>
+                        <td>400 hrs</td>
+                        <td>4.0 FTE-months</td>
+                    </tr>
+                    <tr>
+                        <td>Event Pages (20/year)</td>
+                        <td>400 hrs</td>
+                        <td>4.0 FTE-months</td>
+                    </tr>
+                    <tr style="background: rgba(16, 185, 129, 0.1); font-weight: 700;">
+                        <td><strong>TOTAL SAVINGS</strong></td>
+                        <td><strong>1,650 hrs</strong></td>
+                        <td><strong>16.5 FTE-months</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Intangible Benefits</h3>
+            <ul>
+                <li>Real-time decision-making (faster launches, better pricing)</li>
+                <li>Improved data quality (fewer audit issues)</li>
+                <li>Team satisfaction (less drudgery, more strategy)</li>
+                <li>Competitive advantage (faster to market)</li>
+            </ul>
+
+            <div class="slide-number">Slide 11</div>
+        </div>
+
+        <!-- SLIDE 12: NEXT STEPS -->
+        <div class="slide">
+            <h2>✅ Next Steps: Let's Make This Real</h2>
+            
+            <h3>📅 This Week</h3>
+            <ul>
+                <li><strong>Steering Committee:</strong> Present to CISO, Finance, Ops leads</li>
+                <li><strong>Technical Validation:</strong> 30-min call with Momentus/Ternair admins</li>
+                <li><strong>Pilot Decision:</strong> Green light to launch?</li>
+            </ul>
+
+            <h3>🚀 Pilot: Week 1-2</h3>
+            <ul>
+                <li>Focused implementation (1 beursteam, 2-3 systems)</li>
+                <li>Weekly check-ins with your team</li>
+                <li>Pilot completion report with metrics</li>
+            </ul>
+
+            <h3>📈 Post-Pilot (If Successful)</h3>
+            <ul>
+                <li>Phase 2 plan: Full rollout timeline</li>
+                <li>Ongoing managed service partnership</li>
+                <li>Continuous improvement cycle</li>
+            </ul>
+
+            <div class="cta-box">
+                <strong>Let's book the steering committee alignment for FRIDAY.</strong><br>
+                <strong>Pilot starts Monday - week of Feb 17.</strong>
+            </div>
+
+            <div class="slide-number">Slide 12</div>
+        </div>
+
+    </div>
+
+</body>
+</html>
